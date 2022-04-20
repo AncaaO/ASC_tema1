@@ -1,0 +1,48 @@
+section .data
+	numar: times 100 db 0
+	mesaj1	db	'Numarul citit se afla in multimea {2,4,9}',0xa
+	lungime1	equ	$ - mesaj1
+	mesaj2	db	'Numarul citit nu se afla in multimea {2,4,9}',0xa
+	lungime2	equ	$ - mesaj2
+
+section .text
+
+global _start
+
+_start:
+    
+	mov	eax, 3
+	mov	ebx, 0
+	mov	ecx, numar
+	mov	edx, 1
+	int	0x80 
+
+	movzx	ecx, byte [numar]
+	
+	sub	ecx, 48
+	cmp	ecx, 2
+	je	_et
+	cmp	ecx, 4
+	je	_et
+	cmp	ecx, 9
+	je	_et
+	
+	mov	edx, lungime2
+	mov	ecx, mesaj2
+	mov	ebx, 1
+	mov	eax, 4
+	int	0x80
+	
+_exit:
+	mov	eax, 1
+	mov	ebx, 0
+	int	0x80
+
+_et:
+	mov	edx, lungime1
+	mov	ecx, mesaj1
+	mov	ebx, 1
+	mov	eax, 4
+	int	0x80
+	
+	jmp	_exit
